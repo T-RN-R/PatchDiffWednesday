@@ -7,6 +7,18 @@ I try to do at least 1 patch diff for every Patch Diff Wednesday. This helps me 
 2. Are there any novel vulnerability classes/attack surfaces present?
 3. How can the security community better the state of software security?
 
+## CVEs
+| CVE    | Description | Component | In the Wild |
+
+| -------- | ------- | -------- | ------- |
+
+| CVE-2021-42285  | EoP in `NtTraceControl`    | Windows Kernel  | No   |
+
+| CVE-2022-24528  | Remote buffer overflow     | RPC Runtime | No     |
+
+| CVE-2023-21554    | OOB    | MSMQ    | Nos    |
+
+
 ## What tools do I use?
 I primarly use [Ghidra](https://github.com/NationalSecurityAgency/ghidra), along with the excellent [Ghidra Patch Diff Correlator](https://github.com/clearbluejar/ghidra-patchdiff-correlator). I sometimes use IDA Pro, along with the [Diaphora](https://github.com/joxeankoret/diaphora) plugin if I'm not quite getting the results I want from Ghidra.
 
