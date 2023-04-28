@@ -11,9 +11,9 @@ I try to do at least 1 patch diff for every Patch Diff Wednesday. This helps me 
 
 | CVE    | Description | Component | In the Wild |
 | -------- | ------- | -------- | ------- |
-| CVE-2021-42285  | EoP in `NtTraceControl`    | Windows Kernel  | No   |
-| CVE-2022-24528  | Remote buffer overflow     | RPC Runtime | No     |
-| CVE-2023-21554    | OOB    | MSMQ    | No    |
+| [CVE-2021-42285](Windows/CVE-2021-42285/README.md)  | EoP in `NtTraceControl`    | Windows Kernel  | No   |
+| [CVE-2022-24528](Windows/CVE-2022-24528/README.md)    | Remote buffer overflow     | RPC Runtime | No     |
+| [CVE-2023-21554](Windows/CVE-2023-21554/README.md)      | OOB    | MSMQ    | No    |
 
 
 ## What tools do I use?
