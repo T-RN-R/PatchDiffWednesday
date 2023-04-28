@@ -8,15 +8,12 @@ I try to do at least 1 patch diff for every Patch Diff Wednesday. This helps me 
 3. How can the security community better the state of software security?
 
 ## CVEs
+
 | CVE    | Description | Component | In the Wild |
-
 | -------- | ------- | -------- | ------- |
-
 | CVE-2021-42285  | EoP in `NtTraceControl`    | Windows Kernel  | No   |
-
 | CVE-2022-24528  | Remote buffer overflow     | RPC Runtime | No     |
-
-| CVE-2023-21554    | OOB    | MSMQ    | Nos    |
+| CVE-2023-21554    | OOB    | MSMQ    | No    |
 
 
 ## What tools do I use?
