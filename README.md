@@ -14,6 +14,7 @@ I try to do at least 1 patch diff for every Patch Tuesday (Although currently I 
 | [CVE-2021-42285](Windows/CVE-2021-42285/README.md) | EoP in `NtQuerySystemInformation`       | Windows Kernel | No          |
 | [CVE-2022-24528](Windows/CVE-2022-24528/README.md) | Remote buffer overflow                  | RPC Runtime    | No          |
 | [CVE-2023-21554](Windows/CVE-2023-21554/README.md) | OOB Read/Write                          | MSMQ           | No          |
+| [CVE-2024-26209](Windows/CVE-2024-26209/README.md) | Information disclosure                  | LSASRV.dll     | No          |
 | [CVE-2024-30018](Windows/CVE-2024-30018/README.md) | Bug in `NtSetInformationWorkerFactory`? | Windows Kernel | No          |
 
 
