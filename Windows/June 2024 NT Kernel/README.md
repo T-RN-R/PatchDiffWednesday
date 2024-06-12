@@ -32,7 +32,8 @@ Lets look at the `Authz` changes first
 
 Not too far into the diff for `AuthzBasepCopyoutInternalSecurityAttributes`, we see the following addtion:
 ```diff
-+          uVar10 = Feature_2516935995__private_IsEnabledDeviceUsage();
++          uVar10 = Feature_
+__private_IsEnabledDeviceUsage();
 +          if ((int)uVar10 == 0) {
 +            ppuVar6 = *(ulonglong ***)param_2[1];
 +            if (*ppuVar6 != puVar1) {
@@ -82,6 +83,30 @@ Now, to determine where this attack surface is, we can check the Ghidra call tre
 
 From this, we can see that the vulnerable code is reachable from `NtQueryInformationToken`. We can also see that the call to `AuthzBasepCopyoutInternalSecurityAttributeValues` was likely also vulnerable. That being said, `AuthzBasepCopyoutInternalSecurityAttributeValues` is only ever called from within `AuthzBasepCopyoutInternalSecurityAttributes` so I don't think it really warrants a distinct CVE.
 
+## Another Bug?
+On my second pass, I noticed there were more feature flags used within this function:
+```diff
++          uVar9 = Feature_3391791421__private_IsEnabledDeviceUsage();
++          if ((int)uVar9 == 0) {
++            *(short *)((longlong)plVar12 + -0x46) = (short)local_res20;
++            *(undefined2 *)(plVar12 + -9) = 0;
++            plVar12[-8] = uVar10;
++            RtlCopyUnicodeString((ushort *)(plVar12 + -9),(ushort *)(pplVar13 + 4));
++          }
++          else {
++            _auStack_4c = SUB1612(ZEXT816(0),4);
++            auVar8._2_12_ = _auStack_4c;
++            auVar8._0_2_ = (short)local_res20;
++            _local_50 = auVar8._0_8_ << 0x10;
++            uStack_48 = uVar10;
++            RtlCopyUnicodeString((ushort *)local_50,(ushort *)(pplVar13 + 4));
++            *(undefined (*) [4])(plVar12 + -9) = local_50;
++            *(undefined (*) [4])((longlong)plVar12 + -0x44) = auStack_4c;
++            *(undefined4 *)(plVar12 + -8) = (undefined4)uStack_48;
++            *(undefined4 *)((longlong)plVar12 + -0x3c) = uStack_48._4_4_;
++          }
+```
+#todo Finish this line of research
 # LdrResSearchResource
 
 Within `LdrResSearchResource`, the following change was immediately noticeable:
