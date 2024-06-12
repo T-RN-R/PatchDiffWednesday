@@ -82,3 +82,38 @@ Now, to determine where this attack surface is, we can check the Ghidra call tre
 
 From this, we can see that the vulnerable code is reachable from `NtQueryInformationToken`. We can also see that the call to `AuthzBasepCopyoutInternalSecurityAttributeValues` was likely also vulnerable. That being said, `AuthzBasepCopyoutInternalSecurityAttributeValues` is only ever called from within `AuthzBasepCopyoutInternalSecurityAttributes` so I don't think it really warrants a distinct CVE.
 
+# LdrResSearchResource
+
+Within `LdrResSearchResource`, the following change was immediately noticeable:
+```diff
+-  if (((uVar1 & 0xfff80000) != 0) || (((param_3 < 3 && ((uVar1 & 2) == 0)) || (4 < param_3))))
+-  goto LAB_0;
++  uVar7 = Feature_1875039550__private_IsEnabledDeviceUsage();
++  if ((int)uVar7 == 0) {
++    uVar4 = uVar1 & 0xfff80000;
++  }
++  else {
++    uVar4 = uVar1 & 0xfff00000;
++  }
++  if ((uVar4 != 0) || (((param_3 < 3 && ((uVar1 & 2) == 0)) || (4 < param_3)))) goto LAB_0;
+```
+Again, we have a change gated by a feature flag, this time `Feature_1875039550`. This bug isn't immediately obvious, but we know it has something to do with flags based off of the differing paths taken dependent upon the feature flag. In the patch, `0x8000` is removed from the boolean and statement. Now we just have to determine what the flag actually is. 
+
+If we take a step back for a moment, there was another changed `Ldr` function, `LdrpResGetMappingSize`. It too checks the `Feature_1875039550` flag.
+
+Looking at this function:
+```C
+  uVar7 = 0;
+  FeatureFlag = Feature_1875039550__private_IsEnabledDeviceUsage();
+  if (((int)FeatureFlag == 0) || ((param_3 >> 0x13 & 1) == 0)) {
+    if ((param_3 >> 0x11 & 1) != 0) {
+      uVar7 = *param_2;
+    }
+```
+
+`param_3` in this case is the flag we are passing in to this function. Since `LdrpResGetMappingSize` is invoked by `LdrResSearchResource`, we can follow the feature flag across function calls. It also turns out that `((param_3 >> 0x13 & 1) == 0))` is precisely the bitfield  the feature flag in `LdrResSearchResource` is checking for. 
+
+
+This check in `LdrpResGetMappingSize` is explicitly making sure that the bit in the flag is NOT set, whereas in the parent function, the changes are making it so that we don't care particularly about the value of this bit. This means that there must have been a decision made in the buggy code based upon the presence of this field, leading to some for of broken assumption in the loader. In the case where this bit is set, the new code will skip a whole bunch of logic involving parsing the PE image header, DATA_TABLE_ENTRYs, and invoking `ZwQueryVirtualMemory`.
+
+#todo Figure out what the actual bug is here. Will probably involve crafting special PE files to test. I'm not certain exactly what this flag is yet...
